@@ -1,0 +1,243 @@
+<!-- osnova.html - osnovna (skeletna) predloga, ki jo vse ostale strani 
+     uporabljajo prek %rebase('osnova', ...). Vsebuje <head> s CSS stilom,
+     navigacijo (nav) in noge strani (footer). Vsebina posamezne strani
+     se vstavi tam, kjer Bottle vstavi spremenljivko base. -->
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Naslov strani - privzeto "1. SNL...", lahko ga podstrani prepišejo (naslov=...) -->
+    <title>{{get('naslov', '1. SNL – Slovenska nogometna liga')}}</title>
+    <style>
+        /* Splošni reset - odstranimo privzete robove/odmike */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0f1e;
+            color: #e0e6f0;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ───────────────────────── */
+        /* Zgornja navigacijska vrstica (lestvica / igralci) */
+        nav {
+            background: linear-gradient(135deg, #1a2744 0%, #0d1b3e 100%);
+            border-bottom: 3px solid #2ecc71;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav .logo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #2ecc71;
+            text-decoration: none;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        nav .logo span { color: #fff; }
+        nav a {
+            color: #a0b0cc;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        nav a:hover, nav a.active {
+            background: rgba(46,204,113,0.15);
+            color: #2ecc71;
+        }
+
+        /* ── MAIN ──────────────────────── */
+        /* Glavna vsebina strani - omejena širina, centrirana */
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        h1 span { color: #2ecc71; }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem;
+            color: #c8d8f0;
+            border-left: 4px solid #2ecc71;
+            padding-left: 0.7rem;
+        }
+
+        /* ── CARDS ─────────────────────── */
+        /* "Kartica" - okvir z zaokroženimi robovi, ki vsebuje tabele/podatke */
+        .card {
+            background: #141f38;
+            border: 1px solid #1e3060;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── TABELA ────────────────────── */
+        /* Stil za tabele (lestvica, statistika igralcev/klubov) */
+        .tbl-wrap { overflow-x: auto; } /* omogoči vodoravno drsenje na ozkih zaslonih */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        thead th {
+            background: #0d1b3e;
+            color: #2ecc71;
+            font-weight: 700;
+            padding: 0.75rem 0.8rem;
+            text-align: center;
+            border-bottom: 2px solid #2ecc71;
+            white-space: nowrap;
+        }
+        thead th:first-child { text-align: left; }
+        tbody tr {
+            border-bottom: 1px solid #1e3060;
+            transition: background 0.15s;
+        }
+        tbody tr:hover { background: rgba(46,204,113,0.07); }
+        tbody td {
+            padding: 0.65rem 0.8rem;
+            text-align: center;
+        }
+        tbody td:first-child { text-align: left; }
+        tbody td a {
+            color: #5dade2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        tbody td a:hover { color: #2ecc71; text-decoration: underline; }
+
+        /* ── SEZONA FILTER ─────────────── */
+        /* Vrstica z izbiro sezone in iskalnim poljem */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        .filter-bar label { color: #a0b0cc; font-weight: 600; }
+        .filter-bar select, .filter-bar input[type=text] {
+            background: #1a2744;
+            border: 1px solid #2a4080;
+            color: #e0e6f0;
+            padding: 0.45rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .filter-bar select:focus, .filter-bar input:focus {
+            border-color: #2ecc71;
+        }
+        .filter-bar button {
+            background: #2ecc71;
+            color: #0a0f1e;
+            border: none;
+            padding: 0.45rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .filter-bar button:hover { background: #27ae60; }
+
+        /* ── STAT BOXES ────────────────── */
+        /* Mreža velikih "škatel" s skupnimi statistikami (npr. profil igralca) */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-box {
+            background: #0d1b3e;
+            border: 1px solid #1e3060;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .stat-box .val {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2ecc71;
+        }
+        .stat-box .lbl {
+            font-size: 0.78rem;
+            color: #6080a0;
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── BADGE ─────────────────────── */
+        /* Značke za 1., 2., 3. mesto na lestvici (zlata/srebrna/bronasta) */
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .badge-gold { background: #f1c40f; color: #1a0f00; }
+        .badge-silver { background: #95a5a6; color: #fff; }
+        .badge-bronze { background: #e67e22; color: #fff; }
+
+        /* Povezava "Nazaj" na vrhu podstrani */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.2rem;
+            color: #5dade2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover { color: #2ecc71; }
+
+        /* Sporočilo, ko ni podatkov za prikaz */
+        .empty { color: #4a5a7a; font-style: italic; padding: 1rem 0; }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #2a4060;
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+<!-- Zgornja navigacija -->
+<nav>
+    <a class="logo" href="/"><span>1.</span>SNL</a>
+    <a href="/klubi">Lestvica</a>
+    <a href="/igralci">Igralci</a>
+</nav>
+
+<main>
+    <!-- Sem se vstavi vsebina podstrani (igralci.html, klub.html, ...) -->
+    {{!base}}
+</main>
+
+<footer>1. Slovenska nogometna liga &nbsp;·&nbsp; Podatki: <a href="https://www.prvaliga.si" target="_blank" style="color:#2ecc71;">prvaliga.si</a></footer>
+</body>
+</html>

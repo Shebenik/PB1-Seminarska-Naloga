@@ -1,0 +1,60 @@
+%rebase('osnova', naslov='Lestvica – 1. SNL')
+<h1>Lestvica <span>1. SNL</span></h1>
+
+<form class="filter-bar" method="get" action="/klubi">
+    <label for="sezona">Sezona:</label>
+    <select name="sezona" id="sezona" onchange="this.form.submit()">
+        %for s in sezone:
+        <option value="{{s}}" {{'selected' if s == sezona else ''}}>{{s-1}}/{{str(s)[2:]}}</option>
+        %end
+    </select>
+</form>
+
+%if lestvica:
+<div class="card">
+    <div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th style="text-align:left">Klub</th>
+                <th>Z</th>
+                <th>R</th>
+                <th>P</th>
+                <th>Goli</th>
+                <th>+/-</th>
+                <th>Točke</th>
+            </tr>
+        </thead>
+        <tbody>
+        %for r in lestvica:
+        <tr>
+            <td>
+                %if r['pozicija'] == 1:
+                <span class="badge badge-gold">{{r['pozicija']}}</span>
+                %elif r['pozicija'] == 2:
+                <span class="badge badge-silver">{{r['pozicija']}}</span>
+                %elif r['pozicija'] == 3:
+                <span class="badge badge-bronze">{{r['pozicija']}}</span>
+                %else:
+                {{r['pozicija']}}
+                %end
+            </td>
+            <td><a href="/klub/{{r['id']}}?sezona={{sezona}}">{{r['ime']}}</a></td>
+            <td>{{r['zmage']}}</td>
+            <td>{{r['remi']}}</td>
+            <td>{{r['porazi']}}</td>
+            <td>{{r['dani_goli']}}:{{r['prejeti_goli']}}</td>
+            <td style="color:{{'#2ecc71' if r['razlika'] > 0 else ('#e74c3c' if r['razlika'] < 0 else '#a0b0cc')}}">
+                {{'%+d' % r['razlika']}}
+            </td>
+            <td><strong>{{r['tocke']}}</strong></td>
+        </tr>
+        %end
+        </tbody>
+    </table>
+    </div>
+</div>
+%else:
+<p class="empty">Za to sezono ni podatkov.</p>
+%end

@@ -1,0 +1,89 @@
+%rebase('osnova', naslov=klub['ime'] + ' – 1. SNL')
+<a class="back-link" href="/klubi?sezona={{sezona}}">← Nazaj na lestvico</a>
+
+<h1><span>{{klub['ime']}}</span></h1>
+
+<form class="filter-bar" method="get" action="/klub/{{klub['id']}}">
+    <label for="sezona">Sezona:</label>
+    <select name="sezona" id="sezona" onchange="this.form.submit()">
+        %for s in sezone:
+        <option value="{{s}}" {{'selected' if s == sezona else ''}}>{{s-1}}/{{str(s)[2:]}}</option>
+        %end
+    </select>
+</form>
+
+%if statistika:
+<h2>Statistika kluba</h2>
+<div class="stat-grid">
+    <div class="stat-box">
+        <div class="val">{{statistika['pozicija']}}.</div>
+        <div class="lbl">Mesto</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{statistika['tocke']}}</div>
+        <div class="lbl">Točke</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{statistika['zmage']}}</div>
+        <div class="lbl">Zmage</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{statistika['remi']}}</div>
+        <div class="lbl">Remiji</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{statistika['porazi']}}</div>
+        <div class="lbl">Porazi</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{statistika['dani_goli']}}</div>
+        <div class="lbl">Dani goli</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{statistika['prejeti_goli']}}</div>
+        <div class="lbl">Prejeti goli</div>
+    </div>
+    <div class="stat-box">
+        <div class="val" style="color:{{'#2ecc71' if statistika['razlika'] > 0 else ('#e74c3c' if statistika['razlika'] < 0 else '#a0b0cc')}}">{{'%+d' % statistika['razlika']}}</div>
+        <div class="lbl">Razlika golov</div>
+    </div>
+</div>
+%else:
+<p class="empty">Za to sezono ni podatkov o klubu.</p>
+%end
+
+<h2>Igralci — sezona {{sezona-1}}/{{str(sezona)[2:]}}</h2>
+%if igralci:
+<div class="card">
+    <div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left">Ime</th>
+                <th>Nastopi</th>
+                <th>Minute</th>
+                <th>Goli</th>
+                <th>Asistence</th>
+                <th>🟨</th>
+                <th>🟥</th>
+            </tr>
+        </thead>
+        <tbody>
+        %for i in igralci:
+        <tr>
+            <td><a href="/igralec/{{i['id']}}">{{i['ime']}}</a></td>
+            <td>{{i['nastopi']}}</td>
+            <td>{{i['minute']}}</td>
+            <td>{{i['goli']}}</td>
+            <td>{{i['asistence']}}</td>
+            <td>{{i['rumeni_kartoni']}}</td>
+            <td>{{i['rdeci_kartoni']}}</td>
+        </tr>
+        %end
+        </tbody>
+    </table>
+    </div>
+</div>
+%else:
+<p class="empty">Za to sezono ni podatkov o igralcih.</p>
+%end

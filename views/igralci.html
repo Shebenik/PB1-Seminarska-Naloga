@@ -1,0 +1,47 @@
+%rebase('osnova', naslov='Igralci – 1. SNL')
+<h1>Igralci <span>1. SNL</span></h1>
+
+<form class="filter-bar" method="get" action="/igralci" accept-charset="UTF-8">
+    <label for="sezona">Sezona:</label>
+    <select name="sezona" id="sezona">
+        %for s in sezone:
+        <option value="{{s}}" {{'selected' if s == sezona else ''}}>{{s-1}}/{{str(s)[2:]}}</option>
+        %end
+    </select>
+    <label for="q">Iskanje:</label>
+    <input type="text" id="q" name="q" value="{{iskanje}}" placeholder="Ime igralca…">
+    <button type="submit">Poišči</button>
+</form>
+
+%if rezultati:
+<div class="card">
+    <div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th style="text-align:left">Ime</th>
+                <th>Nastopi</th>
+                <th>Minute</th>
+                <th>Goli</th>
+                <th>Asistence</th>
+            </tr>
+        </thead>
+        <tbody>
+        %for idx, i in enumerate(rezultati, 1):
+        <tr>
+            <td>{{idx}}</td>
+            <td><a href="/igralec/{{i['id']}}">{{i['ime']}}</a></td>
+            <td>{{i['nastopi']}}</td>
+            <td>{{i['minute']}}</td>
+            <td>{{i['goli']}}</td>
+            <td>{{i['asistence']}}</td>
+        </tr>
+        %end
+        </tbody>
+    </table>
+    </div>
+</div>
+%else:
+<p class="empty">Ni rezultatov za iskanje "{{iskanje}}".</p>
+%end

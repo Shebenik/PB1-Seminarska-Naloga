@@ -1,0 +1,79 @@
+%rebase('osnova', naslov=igralec['ime'] + ' – 1. SNL')
+<a class="back-link" href="/igralci">← Nazaj na seznam igralcev</a>
+
+<h1><span>{{igralec['ime']}}</span></h1>
+
+%if kariera:
+<%
+skupaj_goli = sum(r['goli'] for r in kariera)
+skupaj_asistence = sum(r['asistence'] for r in kariera)
+skupaj_nastopi = sum(r['nastopi'] for r in kariera)
+skupaj_minute = sum(r['minute'] for r in kariera)
+skupaj_rumeni = sum(r['rumeni_kartoni'] for r in kariera)
+skupaj_rdeci = sum(r['rdeci_kartoni'] for r in kariera)
+%>
+
+<h2>Skupaj v karieri</h2>
+<div class="stat-grid">
+    <div class="stat-box">
+        <div class="val">{{skupaj_nastopi}}</div>
+        <div class="lbl">Nastopi</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{skupaj_minute}}</div>
+        <div class="lbl">Minute</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{skupaj_goli}}</div>
+        <div class="lbl">Goli</div>
+    </div>
+    <div class="stat-box">
+        <div class="val">{{skupaj_asistence}}</div>
+        <div class="lbl">Asistence</div>
+    </div>
+    <div class="stat-box">
+        <div class="val" style="color:#f1c40f">{{skupaj_rumeni}}</div>
+        <div class="lbl">Rumeni kartoni</div>
+    </div>
+    <div class="stat-box">
+        <div class="val" style="color:#e74c3c">{{skupaj_rdeci}}</div>
+        <div class="lbl">Rdeči kartoni</div>
+    </div>
+</div>
+
+<h2>Statistika po sezonah</h2>
+<div class="card">
+    <div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Sezona</th>
+                <th style="text-align:left">Klub</th>
+                <th>Nastopi</th>
+                <th>Minute</th>
+                <th>Goli</th>
+                <th>Asistence</th>
+                <th>🟨</th>
+                <th>🟥</th>
+            </tr>
+        </thead>
+        <tbody>
+        %for r in kariera:
+        <tr>
+            <td>{{r['sezona']-1}}/{{str(r['sezona'])[2:]}}</td>
+            <td><a href="/klub/{{r['id_kluba']}}?sezona={{r['sezona']}}">{{r['klub']}}</a></td>
+            <td>{{r['nastopi']}}</td>
+            <td>{{r['minute']}}</td>
+            <td>{{r['goli']}}</td>
+            <td>{{r['asistence']}}</td>
+            <td>{{r['rumeni_kartoni']}}</td>
+            <td>{{r['rdeci_kartoni']}}</td>
+        </tr>
+        %end
+        </tbody>
+    </table>
+    </div>
+</div>
+%else:
+<p class="empty">Ni podatkov o statistiki tega igralca.</p>
+%end
