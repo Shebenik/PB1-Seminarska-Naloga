@@ -43,3 +43,15 @@ Baza vsebuje 4 tabele:
 - goli_dani
 - goli_prejeti
 - tocke  
+
+## Potrebni paketi (pip install bottle requests beautifulsoup4)
+- bottle
+- requests
+- beautifulsoup4
+
+## Navodila za zagon
+- Za tekstovni vmesnik:
+  - v mapi s projektom poženi "py cli.py"
+- Za spletni vmesnik: 
+  - V mapi s projektom poženi "py spletni_vmesnik.py"
+  - V brskalniku odpri http://localhost:8080/
