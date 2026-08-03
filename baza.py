@@ -12,7 +12,14 @@ player_stats_csv = os.path.join(csv_dir, "statistika_igralcev.csv")
 club_stats_csv = os.path.join(csv_dir, "statistika_klubov.csv")
 
 # Bazna datoteka
-db_file = "prvaliga7.db"
+db_file = "prvaliga.db"
+
+db_file = "prvaliga.db"
+
+if os.path.exists(db_file):
+    os.remove(db_file)
+
+conn = sqlite3.connect(db_file)
 
 conn = sqlite3.connect(db_file)
 cursor = conn.cursor()
